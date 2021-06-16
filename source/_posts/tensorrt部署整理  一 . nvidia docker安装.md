@@ -1,4 +1,6 @@
-# tensorrt部署整理  一 . nvidia docker安装
+---
+title: tensorrt部署整理  一 . nvidia docker安装
+---
 
 安装前确认几件事：
 
@@ -42,7 +44,7 @@ For more examples and ideas, visit:
 ### 安装Nvidia Docker
 Ubuntu上的Docker CE可以使用Docker的官方的语句进行设置
 
-```
+```shell
 curl https://get.docker.com | sh
 sudo systemctl start docker 
 sudo systemctl enable docker
@@ -50,7 +52,7 @@ sudo systemctl enable docker
 
 设置稳定存储库和GPG密钥：
 
-```
+```shell
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
@@ -60,7 +62,7 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
 
 在更新包列表后安装nvidia-docker2包（和依赖项）
 
-```
+```shell
 sudo apt-get update
 sudo apt-get install -y nvidia-docker2
 ```
