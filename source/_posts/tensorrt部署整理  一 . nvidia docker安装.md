@@ -2,6 +2,8 @@
 title: tensorrt部署整理  一 . nvidia docker安装
 ---
 
+[官方文档地址](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)
+
 安装前确认几件事：
 
 1.电脑显卡驱动是否安装成功
@@ -10,12 +12,19 @@ title: tensorrt部署整理  一 . nvidia docker安装
 
 ### 安装docker 
 1.下载安装包
-`wget -qO- https://get.docker.com/ | sh`
+```shell
+wget -qO- https://get.docker.com/ | sh
+```
 2.使非root用户可以直接运行docker
-`sudo usermod -aG docker 你的用户名`
+```shell
+sudo usermod -aG docker 你的用户名
+```
 然后退出再重新登录。
 3.重新打开shell,测试安装是否成功
-`docker run hello-world`
+```shell
+docker run hello-world
+```
+
 成功安装，获得以下输出
 
 ```
@@ -69,8 +78,34 @@ sudo apt-get install -y nvidia-docker2
 
 设置默认运行时间后，重新启动Docker守护程序完成安装：
 
-`sudo systemctl restart docker`
-此时，可以通过运行基本CUDA容器来测试工作设置(这里cuda:10.1-base可以改成你自己的cuda版本)
+```shell
+sudo systemctl restart docker
+```
+此时，可以通过运行基本CUDA容器来测试工作设置(这里cuda:10.1-base可以改成你自己的cuda版本)   [nvidia docker仓库地址](https://hub.docker.com/r/nvidia/cuda/tags) 
 
-[nvidiacuda仓库](https://hub.docker.com/r/nvidia/cuda/tags) 
+```shell
+sudo docker run --rm --gpus all nvidia/cuda:10.1-base nvidia-smi -l
+```
+
+```
+Fri Sep 18 09:37:52 2020       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 440.100      Driver Version: 440.100      CUDA Version: 10.2     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  GeForce GTX 1070    Off  | 00000000:01:00.0  On |                  N/A |
+| N/A   43C    P8     7W /  N/A |    168MiB /  8111MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+                                                                                
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
++-----------------------------------------------------------------------------+
+
+```
+
+如果没出这个画面也没关系，重启一下就好
 
