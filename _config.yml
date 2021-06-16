@@ -103,4 +103,4 @@ theme: landscape
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git                 # type为git
-  repo: https://github.com/doge-ac-cn/doge-ac-cn.github.io.git  # 仓库的URL
+  repo: git@github.com:doge-ac-cn/doge-ac-cn.github.io.git  # 仓库的URL
