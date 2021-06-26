@@ -1,5 +1,6 @@
 ---
 title: github创建hexo博客
+tags: hexo搭建
 ---
 
 ## hexo配置

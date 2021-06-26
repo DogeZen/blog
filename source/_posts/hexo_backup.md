@@ -1,5 +1,6 @@
 ---
 title: 备份与修改在github的hexo博客
+tags: hexo搭建
 ---
 ## 思路
 思路很简单，另外建个分支用来存hexo的代码。

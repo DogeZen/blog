@@ -1,5 +1,8 @@
 ---
 title: tensorrt部署整理  一 . nvidia docker安装
+tags: 
+- tensorrt 
+- 环境部署
 ---
 
 [官方文档地址](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)
