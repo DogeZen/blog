@@ -10,26 +10,26 @@ tags:
 
 先初始化
 
-```
+```python
 from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter(comment =f'LR_{lr}_BS_{batch_size}_SCALE_{img_scale}')
 ```
 
 散点图
 
-```
+```python
 writer.add_scalar('Loss/train', loss.item(), global_step) 
 ```
 
 直方图
 
-```
+```python
 writer.add_histogram('weights/'+tag, value.data.cpu().numpy(),global_step)
 ```
 
 绘图
 
-```
+```python
 writer.add_images('masks/true', true_masks, global_step)
 writer.add_images('masks/pred', torch.sigmoid(masks_pred) > 0.5, global_step)
 ```
@@ -38,7 +38,7 @@ writer.add_images('masks/pred', torch.sigmoid(masks_pred) > 0.5, global_step)
 
 ## 2.查看
 
-```
+```shell
 tensorboard --logdir=runs
 ```
 
