@@ -1,4 +1,6 @@
 npm install
 npm install hexo-deployer-git --save
-npm install https://github.com/CodeFalling/hexo-asset-image --save
-
+npm install hexo-asset-img --save
+hexo clean
+hexo g
+hexo s
