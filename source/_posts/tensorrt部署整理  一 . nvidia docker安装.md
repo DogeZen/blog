@@ -1,5 +1,6 @@
 ---
 title: tensorrt部署整理  一 . nvidia docker安装
+date: 2021-07-1 08:00:00
 tags: 
 - tensorrt 
 - 环境部署

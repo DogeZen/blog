@@ -1,5 +1,6 @@
 ---
 title : windows wsl2配置
+date: 2021-07-1 08:00:00
 tags:  
 - wsl2
 - 部署

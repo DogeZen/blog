@@ -1,5 +1,6 @@
 ---
 title: github创建hexo博客
+date: 2021-06-15 07:00:00
 tags: hexo搭建
 ---
 

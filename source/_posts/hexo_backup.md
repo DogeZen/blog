@@ -1,5 +1,6 @@
 ---
 title: 备份与修改在github的hexo博客
+date: 2021-06-15 08:00:00
 tags: hexo搭建
 ---
 ## 思路

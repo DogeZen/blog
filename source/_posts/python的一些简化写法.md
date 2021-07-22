@@ -1,5 +1,6 @@
 ---
 title : python的一些简化写法
+date: 2021-07-15 08:00:00
 tags :
 - python
 ---

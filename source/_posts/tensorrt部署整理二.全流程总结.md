@@ -1,5 +1,6 @@
 ---
 title: tensorrt部署整理二.全流程总结
+date: 2021-07-1 08:00:00
 tags: 
 - tensorrt 
 - 环境部署

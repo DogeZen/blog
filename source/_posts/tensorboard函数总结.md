@@ -1,5 +1,6 @@
 ---
 title: tensorboard函数整理
+date: 2021-07-15 08:00:00
 tags:  
 - pytorch
 ---
