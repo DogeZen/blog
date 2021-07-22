@@ -5,6 +5,6 @@ tags :
 - 实例分割
 ---
 
-![[1](solo_1.png)
-![[2](solo_2.png)
-![[3](solo_3.png)
+![[solo_1](solo_1.png)
+![[solo_2](solo_2.png)
+![[solo_3](solo_3.png)
