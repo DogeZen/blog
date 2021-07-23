@@ -5,6 +5,8 @@ tags :
 - 实例分割
 ---
 
+[ 论文地址](https://arxiv.org/abs/1912.04488)
+
 ![网格结构](solo_1.png)
 
 和yolov1一样，采用s*s的网格，每个网格都预测一个mask。
