@@ -1,5 +1,5 @@
 ---
-title: python踩坑-各类编码
+title: python踩坑-各类编码问题
 date: 2021-07-27 16:25:22
 tags:
 - python
@@ -26,11 +26,11 @@ url带空格，+, = , ?等特殊字符导致urllib.request.urlopen(url)解析失
 
 开发中出现这个问题，需要先去跟同事沟通，确定问题来源。
 
-[具体解释的博客][https://blog.csdn.net/dyyshb/article/details/82346699]
+[具体解释的博客](https://blog.csdn.net/dyyshb/article/details/82346699)
 
 #### 实在不行也可以python解决
 
-```
+```python
 url=url.replace(" ", "%20").replace("+", "%20").replace("/", " %2F") \
     .replace("#", "%23").replace("&", "%26").replace("=", "%3D")
 ```
@@ -67,3 +67,4 @@ def cv2ImgAddText(img, text, left, top, textColor=(0, 255, 0), textSize=20):
 ```python
 im0 = cv2ImgAddText(im0, f"有效数量:{num}\n均值    :{average_length:.2f}cm\n标准差  :{std_length:.2f}cm", 0, 10, (255, 255, 255), 150)
 ```
+
