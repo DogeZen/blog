@@ -5,9 +5,47 @@ tags:
 - 环境部署
 ---
 
-[idea集成docker 实现远程连接 - yamiya - 博客园 (cnblogs.com)](https://www.cnblogs.com/yamiya/p/12571686.html)
+#### 方法一:通过2375端口直接访问服务器，从而能够调用所有docker。
 
-留个备份
+1、修改docker服务文件
 
-docker.service重启时会把所有docker重启，在公司服务器上不能动，以后有机会用实验室电脑实验。
+```
+vi  /lib/systemd/system/docker.service
+```
+
+修改ExecStart这一行，把原来的前面加上#号注释掉
+
+```
+ExecStart=/usr/bin/dockerd    -H tcp://0.0.0.0:2375    -H unix:///var/run/docker.sock
+```
+
+2、重新加载配置
+
+```
+systemctl daemon-reload
+```
+
+3.重启服务
+
+```
+systemctl restart docker.service
+```
+
+4.设置pycahrm
+
+新建编译器，选择docker，然后添加tcp连接。
+
+![image-20210802135519727](1.png)
+
+![image-20210802135417028](2.png)
+
+ps:
+
+1.如果连不上，需要配置防火墙打开2375端口。
+
+2.不够安全，后续记得设置证书，防止被人黑了拿来挖矿。
+
+#### 方法二:docker端口映射，通过端口访问docker
+
+待续
 
