@@ -26,8 +26,8 @@ apt-get install patchelf rapidjson-dev python3-dev
 
 例如，构建一个使用 NGC 21.02 版本的 PyTorch 容器的后端,步骤如下:
 
-```
-https://github.com/triton-inference-server/pytorch_backend.git
+```shell
+git clone https://github.com/triton-inference-server/pytorch_backend.git
 git checkout r21.02
 mkdir build
 cd build
@@ -47,7 +47,7 @@ make install
 
 这里如果报错cmake版本过低，则
 
-```
+```shell
 apt remove cmake
 pip install cmake --upgrade
 ```
@@ -95,7 +95,7 @@ libtriton_mybackend.so
 
 最简单的config.pbtxt示例如下:
 
-```
+```json
   platform: "pytorch"
   max_batch_size: 8
   input [
