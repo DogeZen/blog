@@ -139,7 +139,15 @@ trace_model.save('checkpoints/model.pt')
 
 ## 4.triton加载模型
 
-post请求 <u>服务器ip:8000/v2/repository/models/模型名/load</u>
+post请求 <u>服务器ip:端口/v2/repository/models/模型名/load</u>
 
+返回为空的话说明成功加载
 
+## 5.flask编写客户端接收图片返回识别结果
+
+项目地址:[triton_client_pytorch: 跑pt文件的nvidia client端](https://gitee.com/doge_ac_cn/triton_client_pytorch)
+
+参考代码
+
+[client/simple_grpc_shm_client.py nvidia官方示例](https://github.com/triton-inference-server/client/blob/530bcac5f1574aa2222930076200544eb274245c/src/python/examples/simple_grpc_shm_client.py)
 
