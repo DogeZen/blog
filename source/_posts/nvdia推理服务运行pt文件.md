@@ -52,19 +52,13 @@ apt remove cmake
 pip install cmake --upgrade
 ```
 
+编译完成后会在build文件夹里产生很多库文件，这些库文件将在后续被使用
+
 参考自[pytorch后端配置文档](https://github.com/triton-inference-server/pytorch_backend)
 
 ## 2.使用编译后的共享库
 
-编译完成后会产生一个backend的共享库
-
-Triton会按以下先后顺序找这个库:
-1.<model_repository>/M/<version_directory>/libtriton_B.so
-2.<model_repository>/M/libtriton_B.so
-3.<global_backend_directory>/B/libtriton_B.so
-其中<global_backend_directory>默认为/opt/tritonserver/backends。--backend-directory标志可以用来覆盖默认值。
-
-通常情况放在这里
+通常情况放在triton镜像的这里
 
 ```
 /opt/
@@ -91,35 +85,61 @@ libtriton_mybackend.so
         model.pt pt文件
 ```
 
-详细可以去看官方文档[模型仓库配置](https://github.com/triton-inference-server/server/blob/r21.06/docs/model_repository.md)
+model.pt需要由pth文件生成,示例如下
+
+```python
+import torch
+from unet import UNet
+
+# 读取模型
+# model = UNet(n_channels=3, n_classes=1, bilinear=True)
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# model = model.to(device)
+# model.load_state_dict(torch.load("checkpoints/best_0.8774614781141281.pth", map_location=device))
+#
+# model = model.eval()
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = torch.load("checkpoints/best_0.8774614781141281.pth", map_location=device)
+model.to(device)
+model.eval()
+
+# 创建输入tensor
+dummy_input = torch.ones(1, 3, 360, 640).to(device)
+# 生成pt
+trace_model = torch.jit.trace(model, dummy_input)
+trace_model.save('checkpoints/model.pt')
+```
+
+
 
 最简单的config.pbtxt示例如下:
 
 ```json
-  platform: "pytorch"
-  max_batch_size: 8
+  platform: "pytorch_libtorch"
+  max_batch_size: 1
   input [
     {
-      name: "input0"
+      name: "INPUT__0"
       data_type: TYPE_FP32
-      dims: [ 3,360,640]
+      dims: [ 3, 360, 640]
     }
   ]
   output [
     {
-      name: "output0"
+      name: "OUTPUT__0"
       data_type: TYPE_FP32
-      dims: [ 3,360,640 ]
+      dims: [ 3, 360, 640 ]
     }
   ]
 ```
-必须指定 [backend](https://github.com/triton-inference-server/backend/blob/main/README.md#backends)，max_batch_size，input，output。
+必须指定 [backend或platform](https://github.com/triton-inference-server/backend/blob/main/README.md#backends)，[max_batch_size](https://github.com/triton-inference-server/server/blob/r21.06/docs/model_configuration.md#maximum-batch-size)，[input与output](https://github.com/triton-inference-server/server/blob/r21.06/docs/model_configuration.md#inputs-and-outputs)。
 
 详细配置可以去看 [模型配置官方文档](https://github.com/triton-inference-server/server/blob/r21.06/docs/model_configuration.md)
 
 ## 4.triton加载模型
 
-post请求 <u>192.168.1.15:8000/v2/repository/models/模型名/load</u>
+post请求 <u>服务器ip:8000/v2/repository/models/模型名/load</u>
 
 
 
