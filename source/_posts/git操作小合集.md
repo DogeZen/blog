@@ -49,6 +49,7 @@ git push origin: < branchname > // 删除后推送至服务器
 
 git branch - m < oldbranch > < newbranch > // 重命名本地分支
 
+git checkout < branchname > //切换分支
 5.查看历史版本
 git log
 ```

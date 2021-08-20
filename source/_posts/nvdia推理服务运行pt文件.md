@@ -7,17 +7,79 @@ tags:
 - pytorch
 ---
 
-triton server默认都是tensorrt推理，但也会出现有操作不支持，导致无法转模型为engine的情况。
+triton server默认都是tensorrt推理。
 
-此时可以直接运行pytorch的pt文件。
+但也会出现有操作不支持，导致无法转模型为engine的情况。
 
-### pytorch模型仓库结构
+可以选择直接运行pytorch的pt文件，以下为操作步骤。
+## 1.pytorch后端环境编译步骤
 
-pytorch模型必须命名为model.pt。
+原理是使用 pytorch C++ API运行pt文件模型。
 
-这个默认名可以在模型配置文件config.pbtxt里更改。
+#### 安装依赖项
 
-不同版本的pytorch可能不互相适配，因为底层操作会不同。
+```shell
+apt-get install patchelf rapidjson-dev python3-dev
+```
+
+####  构建NGC 的 PyTorch 容器。
+
+例如，构建一个使用 NGC 21.02 版本的 PyTorch 容器的后端,步骤如下:
+
+```
+https://github.com/triton-inference-server/pytorch_backend.git
+git checkout r21.02
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install -DTRITON_PYTORCH_DOCKER_IMAGE="nvcr.io/nvidia/pytorch:21.02-py3" ..
+make install
+```
+
+以下所需的 Triton 存储库将被拉取并在构建中使用。
+
+默认情况下，每个git分支的标签都是main。
+
+ 但以下CMake 参数可以被重新设置。
+
+- triton-inference-server/backend: -DTRITON_BACKEND_REPO_TAG=[tag]
+- triton-inference-server/core: -DTRITON_CORE_REPO_TAG=[tag]
+- triton-inference-server/common: -DTRITON_COMMON_REPO_TAG=[tag]
+
+这里如果报错cmake版本过低，则
+
+```
+apt remove cmake
+pip install cmake --upgrade
+```
+
+参考自[pytorch后端配置文档](https://github.com/triton-inference-server/pytorch_backend)
+
+## 2.使用编译后的共享库
+
+编译完成后会产生一个backend的共享库
+
+Triton会按以下先后顺序找这个库:
+1.<model_repository>/M/<version_directory>/libtriton_B.so
+2.<model_repository>/M/libtriton_B.so
+3.<global_backend_directory>/B/libtriton_B.so
+其中<global_backend_directory>默认为/opt/tritonserver/backends。--backend-directory标志可以用来覆盖默认值。
+
+通常情况放在这里
+
+```
+/opt/
+tritonserver/
+backends/
+mybackend/
+libtriton_mybackend.so
+... # mybackend需要的其他文件
+```
+
+关于后端配置详细可以去看[后端配置官方文档](https://github.com/triton-inference-server/backend/blob/main/README.md#backends)
+
+## 3.pytorch模型仓库
+
+此时环境准备完成，准备模型仓库即可。
 
 最简的TorchScript模型仓库如下:
 
@@ -31,13 +93,7 @@ pytorch模型必须命名为model.pt。
 
 详细可以去看官方文档[模型仓库配置](https://github.com/triton-inference-server/server/blob/r21.06/docs/model_repository.md)
 
-### 最简的配置文件config.pbtxt
-
-除了tensorrt模型可以自动获取配置，其他的都需要指定模型配置文件。
-
-必须指定 [平台或者后端](https://github.com/triton-inference-server/backend/blob/main/README.md#backends)，最大batchsize，输入输出tensor。
-
-示例如下:
+最简单的config.pbtxt示例如下:
 
 ```
   platform: "pytorch"
@@ -57,64 +113,13 @@ pytorch模型必须命名为model.pt。
     }
   ]
 ```
+必须指定 [backend](https://github.com/triton-inference-server/backend/blob/main/README.md#backends)，max_batch_size，input，output。
+
 详细配置可以去看 [模型配置官方文档](https://github.com/triton-inference-server/server/blob/r21.06/docs/model_configuration.md)
 
-### pytorch后端环境编译步骤
+## 4.triton加载模型
 
-原理是使用 pytorch C++ API运行pt文件模型。
+post请求 <u>192.168.1.15:8000/v2/repository/models/模型名/load</u>
 
-#### 安装依赖项
 
-```shell
-apt-get install patchelf rapidjson-dev python3-dev
-```
-
-####  构建NGC 的 PyTorch 容器。
-
-例如，构建一个使用 NGC 21.02 版本的 PyTorch 容器的后端,步骤如下:
-
-```
-mkdir build
-cd build
-cmake -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install -DTRITON_PYTORCH_DOCKER_IMAGE="nvcr.io/nvidia/pytorch:21.02-py3" ..
-make install
-```
-
-以下所需的 Triton 存储库将被拉取并在构建中使用。
-
-默认情况下，每个repo的标签都是main， 但以下CMake 参数可以被重设。
-
-- triton-inference-server/backend: -DTRITON_BACKEND_REPO_TAG=[tag]
-- triton-inference-server/core: -DTRITON_CORE_REPO_TAG=[tag]
-- triton-inference-server/common: -DTRITON_COMMON_REPO_TAG=[tag]
-
-#### 使用自定义 PyTorch 构建 PyTorch 后端
-
-Triton的PyTorch后端，使用特别修改版本的PyTorch。
-
-这些PyTorch版本的完整源代码和Docker镜像，都可以从NGC中获取。
-
-例如，与Triton的21.02版本兼容的PyTorch版本，为nvcr.io/nvidia/pytorch:21.02-py3。
-将 [PyTorch NGC 容器](https://ngc.nvidia.com/catalog/containers/nvidia:pytorch)中的LibTorch和Torchvision头文件和库复制到本地目录。
-
-你可以从docker中看到哪些头文件和库是需要/复制的。
-
-```
-$ mkdir build
-$ cd build
-$ cmake -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install -DTRITON_PYTORCH_INCLUDE_PATHS="<PATH_PREFIX>/torch;<PATH_PREFIX>/torch/torch/csrc/api/include;<PATH_PREFIX>/torchvision" -DTRITON_PYTORCH_LIB_PATHS="<LIB_PATH_PREFIX>" ..
-$ make install
-
-```
-
-这里如果报错cmake版本过低，则
-
-```
-apt remove cmake
-pip install cmake --upgrade
-```
-
-参考自[pytorch后端配置文档](https://github.com/triton-inference-server/pytorch_backend)
-
-关于后端配置详细可以去看[后端配置官方文档](https://github.com/triton-inference-server/backend/blob/main/README.md#backends)
 
