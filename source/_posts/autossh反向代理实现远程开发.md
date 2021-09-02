@@ -64,6 +64,16 @@ autossh -M 6666 -NR 6666:localhost:22 root@119.45.239.194 -p 22
 
 用来方便重连时不用输入账号密码
 
+```
+ssh-keygen -t rsa
+```
+
+```
+sudo ssh-copy-id -i /home/doge/.ssh/id_rsa  root@119.45.239.194
+```
+
+
+
 #### 4.内网主机开机自启动
 
 使用systemctl来注册一个能够开机自动启动的服务。
