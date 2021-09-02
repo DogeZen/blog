@@ -13,7 +13,7 @@ tags:
 
 有图形界面直接软件更新->附加驱动 就能找到nvidia驱动安装
 
-无图形界面需要去[下载run文件自行安装]([Download Drivers | NVIDIA](https://www.nvidia.com/Download/index.aspx?lang=en-us))，这里我有图形界面所以不去搞了。
+无图形界面需要去[下载run文件自行安装]([https://www.nvidia.com/Download/index.aspx?lang=en-us)，这里我有图形界面所以不去搞了。
 
 #### docker安装
 
