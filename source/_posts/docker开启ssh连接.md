@@ -36,7 +36,7 @@ apt install openssh-server
 
 ```
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-service ssh restart
+service sshd restart
 ```
 
 #### 4.初始化root密码
@@ -44,4 +44,28 @@ service ssh restart
 ```
 passwd root
 ```
+
+#### 5.密钥登录设置
+
+[设置 SSH 通过密钥登录 | 菜鸟教程 (runoob.com)](https://www.runoob.com/w3cnote/set-ssh-login-key.html)
+
+docker内生成密钥并安装公钥
+
+```
+ ssh-keygen
+ cd .ssh
+ cat id_rsa.pub >> authorized_keys
+```
+
+设置ssh密钥登录
+
+/etc/ssh/sshd_config加上
+
+```
+echo "RSAAuthentication yes" >> /etc/ssh/sshd_config
+echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
+service sshd restart
+```
+
+
 

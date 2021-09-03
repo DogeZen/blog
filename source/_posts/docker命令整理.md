@@ -5,6 +5,8 @@ tags:
 - docker
 ---
 
+[菜鸟教程合集](https://www.runoob.com/docker/docker-command-manual.html)
+
 #### 查看
 
 ```
@@ -13,7 +15,7 @@ docker ps -a
 docker images
 ```
 
-#### 通过镜像运行容器
+#### 运行容器
 
 ```
 docker run -it --name 容要创建的容器名  -p 主机端口:容器端口 要使用的镜像名
@@ -24,12 +26,21 @@ docker run -it --name tyl_pytorch  -p 1227:22 c35f519fe286
 ```
 
 - --name 容器名
-
 - -p: 指定端口映射，格式为：主机端口:容器端口
-
 - -it i 以交互模式运行容器 t 为容器重新分配一个伪输入终端
+- -v /宿主机目录:/容器目录 将宿主机目录挂载到容器里
 
-  
+#### 更新容器配置
+
+```
+docker update [OPTIONS] 容器名
+```
+
+如
+
+```
+docker update --restart=always tyl-docker
+```
 
 #### 连接docker,退出docker
 
