@@ -49,12 +49,25 @@ passwd root
 
 [设置 SSH 通过密钥登录 | 菜鸟教程 (runoob.com)](https://www.runoob.com/w3cnote/set-ssh-login-key.html)
 
-docker内生成密钥并安装公钥
+docker内和自己主机各自生成密钥
 
 ```
- ssh-keygen
- cd .ssh
- cat id_rsa.pub >> authorized_keys
+ssh-keygen
+```
+
+##### docker内
+
+新建authorized_keys,并且把自己主机上的公钥拷到里面
+
+```
+vim authorized_keys
+```
+
+修改ssh目录和authorized_keys权限
+
+```
+chmod 600 authorized_keys
+chmod 700 ~/.ssh
 ```
 
 设置ssh密钥登录
@@ -65,6 +78,18 @@ docker内生成密钥并安装公钥
 echo "RSAAuthentication yes" >> /etc/ssh/sshd_config
 echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
 service sshd restart
+```
+
+##### 主机vscode访问
+
+修改.ssh文件的config文件
+
+```
+Host xxx.xxx.xxx.xxx
+  HostName xxx.xxx.xxx.xxx
+  Port xxxx
+  User xxxx
+  IdentityFile C:\Users\用户名\.ssh\id_rsa(你的私钥文件地址)
 ```
 
 
