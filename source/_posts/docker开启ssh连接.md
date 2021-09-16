@@ -36,7 +36,7 @@ apt install openssh-server
 
 ```
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-service sshd restart
+service ssh restart
 ```
 
 #### 4.初始化root密码
@@ -75,9 +75,8 @@ chmod 700 ~/.ssh
 /etc/ssh/sshd_config加上
 
 ```
-echo "RSAAuthentication yes" >> /etc/ssh/sshd_config
 echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
-service sshd restart
+service ssh restart
 ```
 
 ##### 主机vscode访问
