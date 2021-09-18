@@ -22,13 +22,11 @@ anchor-free 文章
 
 
 
-## 论文
-
-### yolov1
+## yolov1
 
 论文原文：https://arxiv.org/pdf/1506.02640.pdf
 
-#### 输出矩阵的构成
+### 输出矩阵的构成
 
 ![image-20210918165857975](image-20210918165857975.png)
 
@@ -42,7 +40,7 @@ anchor-free 文章
 
 5 是x,y,w,h,是否存在物体的置信度
 
-#### loss结构
+### loss结构
 
 ![image-20210918165753432](image-20210918165753432.png)
 
@@ -54,15 +52,15 @@ anchor-free 文章
 
 3.每个**预测错**的框内部是否存在物体的loss 
 
-### Fcos 
+## Fcos 
 [FCOS:一阶全卷积目标检测 - 知乎 (zhihu.com) ](https://zhuanlan.zhihu.com/p/63868458)   
 [论文](https://arxiv.org/pdf/1904.01355.pdf)
 
-#### 1.backbone
+### 1.backbone
 
 fpn的backbone
 
-#### 2.head
+### 2.head
 
 对fpn提取到的特征图，对特征图上每个点都进行预测。
 
@@ -72,7 +70,7 @@ fpn的backbone
 
 即最终预测结果为 特征图大小 * (类别数 + 4 )。
 
-#### 3.centerness loss 过滤低质量预测框
+### 3.centerness loss 过滤低质量预测框
 
 ![image-20210918162310459](image-20210918162310459.png)
 
