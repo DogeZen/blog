@@ -25,6 +25,8 @@ pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f h
 
 如果`pip3 install -e .`显示setuptool报错,则`pip3 install -U setuptools`
 
+**尤其需要注意**: 如果是docker 运行项目，会因为运行过程中占满内存而被kill ，因此需要在docker run 时指定`--ipc=host`
+
 
 
 ## 二.数据准备
@@ -187,6 +189,8 @@ dataset.json 包含数据集的元数据。
 
 标签文件必须为包含连续整数的分割图，从 0 开始：0, 1, 2, 3, ... 标签数。
 
+
+
 ## 三.预处理
 
 如果数据集路径正确，如nnUNet_raw_data_base/nnUNet_raw_data/TaskXXX_MYTASK
@@ -202,6 +206,8 @@ XXX 是任务名称 TaskXXX_MYTASK 中的值。
 运行完之后可以在 nnUNet_preprocessed/TaskXXX_MYTASK 中找到输出。 
 
 --verify_dataset_integrity 用来验证数据集是否正确
+
+
 
 ## 四.训练模型
 
