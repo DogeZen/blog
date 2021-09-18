@@ -6,7 +6,7 @@ tags:
 - 神经网络
 ---
 
-## 文章
+# 文章
 
 anchor 文章
 
@@ -22,11 +22,11 @@ anchor-free 文章
 
 
 
-## yolov1
+# yolov1
 
 论文原文：https://arxiv.org/pdf/1506.02640.pdf
 
-### 输出矩阵的构成
+#### 输出矩阵的构成
 
 ![image-20210918165857975](image-20210918165857975.png)
 
@@ -40,7 +40,7 @@ anchor-free 文章
 
 5 是x,y,w,h,是否存在物体的置信度
 
-### loss结构
+#### loss结构
 
 ![image-20210918165753432](image-20210918165753432.png)
 
@@ -52,7 +52,11 @@ anchor-free 文章
 
 3.每个**预测错**的框内部是否存在物体的loss 
 
-## Fcos 
+
+
+
+
+# Fcos 
 [FCOS:一阶全卷积目标检测 - 知乎 (zhihu.com) ](https://zhuanlan.zhihu.com/p/63868458)   
 [论文](https://arxiv.org/pdf/1904.01355.pdf)
 
