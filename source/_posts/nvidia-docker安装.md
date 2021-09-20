@@ -69,3 +69,5 @@ sudo systemctl restart docker
 sudo docker run --rm --gpus all --name tyl-docker  nvidia/cuda:11.4.1-devel-ubuntu18.04
 ```
 
+如果需要pytorch的docker，可以直接去[PyTorch | NVIDIA NGC](https://ngc.nvidia.com/catalog/containers/nvidia:pytorch/tags)
+
