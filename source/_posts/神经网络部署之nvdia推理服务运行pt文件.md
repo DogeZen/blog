@@ -1,5 +1,5 @@
 ---
-title: nvdia triton server运行pt文件
+title: 神经网络部署之nvdia推理服务运行pt文件
 date: 2021-08-19 10:13:23
 tags:
 - tensorrt

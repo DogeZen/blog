@@ -1,5 +1,5 @@
 ---
-title: nvidia-docker安装
+title: docker之nvidia-docker安装
 date: 2021-09-02 18:05:11
 tags:
 - docker

@@ -1,5 +1,5 @@
 ---
-title : solo系列原理整理
+title : 神经网络论文solo
 date: 2021-07-22 07:00:00
 tags :
 - 实例分割

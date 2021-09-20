@@ -1,5 +1,5 @@
 ---
-title: nnunet
+title: 深度学习项目nnunet
 date: 2021-09-16 18:41:11
 tags:
 - 神经网络

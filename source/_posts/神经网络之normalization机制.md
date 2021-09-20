@@ -1,5 +1,5 @@
 ---
-title: normalization机制
+title: 神经网络之normalization机制
 date: 2021-09-18 10:58:17
 tags:
 - 深度学习

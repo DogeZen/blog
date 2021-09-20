@@ -1,5 +1,5 @@
 ---
-title: tensorboard函数整理
+title: 神经网络训练tip之tensorboard函数总结.md
 date: 2021-07-15 08:00:00
 tags:  
 - pytorch

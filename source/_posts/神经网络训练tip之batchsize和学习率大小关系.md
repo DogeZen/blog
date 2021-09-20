@@ -1,5 +1,5 @@
 ---
-title: batchsize和学习率大小关系
+title: 神经网络训练tip之batchsize和学习率大小关系
 date: 2021-07-27 15:58:20
 tags:
 - 深度学习
