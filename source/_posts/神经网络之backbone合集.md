@@ -19,10 +19,8 @@ vgg 用两个3 * 3 替代 5 * 5
 
 横 
 
-# fpn
+# EfficientNet
 
-特征金字塔，提取多尺度特征图
 
-# SPP
 
-移除CNN对于固定输入的要求
+# MobileNet
