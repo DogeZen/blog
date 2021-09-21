@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh_CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="神经网络,深度学习," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="文章anchor 文章 目标检测中的Anchor - 知乎 (zhihu.com) 锚框：Anchor box综述 - 知乎 (zhihu.com) anchor-free 文章 目标检测：Anchor-Free时代 - 知乎 (zhihu.com) 物体检测的轮回: anchor-based 与 anchor-free - 知乎 (zhihu.com) yolov1论文原文：https:&#x2F;&#x2F;ar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络之anchor-free集合">
+<meta property="og:url" content="http://example.com/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/index.html">
+<meta property="og:site_name" content="柴犬的博客">
+<meta property="og:description" content="文章anchor 文章 目标检测中的Anchor - 知乎 (zhihu.com) 锚框：Anchor box综述 - 知乎 (zhihu.com) anchor-free 文章 目标检测：Anchor-Free时代 - 知乎 (zhihu.com) 物体检测的轮回: anchor-based 与 anchor-free - 知乎 (zhihu.com) yolov1论文原文：https:&#x2F;&#x2F;ar">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/image-20210918165857975.png">
+<meta property="og:image" content="http://example.com/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/image-20210918165753432.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=FL(p_t)=%5Calpha_t(1-p_t)%5E%5Cgamma+log(p_t)">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=p_t">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cgamma">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Calpha_t">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cgamma">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Calpha_t">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=p_t">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=(1-p_t)">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Calpha_t+">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Calpha_t">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=1-%5Calpha_t">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cgamma">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Calpha_t">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cgamma=2+">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Calpha_t=0.25">
+<meta property="og:image" content="http://example.com/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/image-20210918162310459.png">
+<meta property="article:published_time" content="2021-09-18T02:55:18.000Z">
+<meta property="article:modified_time" content="2021-09-21T12:33:57.897Z">
+<meta property="article:author" content="Doge">
+<meta property="article:tag" content="神经网络">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/image-20210918165857975.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/09/18/神经网络之anchor-free集合/"/>
+
+
+
+
+
+  <title>神经网络之anchor-free集合 | 柴犬的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh_CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">柴犬的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">持续搬迁中</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="柴犬的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络之anchor-free集合</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-09-18T10:55:18+08:00">
+                2021-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="文章"><a href="#文章" class="headerlink" title="文章"></a>文章</h1><p>anchor 文章</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/55824651">目标检测中的Anchor - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/63024247">锚框：Anchor box综述 - 知乎 (zhihu.com)</a></p>
+<p>anchor-free 文章</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/62103812">目标检测：Anchor-Free时代 - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/62372897">物体检测的轮回: anchor-based 与 anchor-free - 知乎 (zhihu.com)</a></p>
+<h1 id="yolov1"><a href="#yolov1" class="headerlink" title="yolov1"></a>yolov1</h1><p>论文原文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1506.02640.pdf">https://arxiv.org/pdf/1506.02640.pdf</a></p>
+<h4 id="输出矩阵的构成"><a href="#输出矩阵的构成" class="headerlink" title="输出矩阵的构成"></a>输出矩阵的构成</h4><p><img src="/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/image-20210918165857975.png" alt="image-20210918165857975"></p>
+<p>7 * 7 * 30 = 7 * 7 * ( 20 + 2 * 5 ) </p>
+<p>7 分割成7×7的网格</p>
+<p>2 一个格子会预测两个框</p>
+<p>20 预测的种类数量</p>
+<p>5 是x,y,w,h,是否存在物体的置信度</p>
+<h4 id="loss结构"><a href="#loss结构" class="headerlink" title="loss结构"></a>loss结构</h4><p><img src="/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/image-20210918165753432.png" alt="image-20210918165753432"></p>
+<p>7 * 7个格子，每个格子两个框的loss</p>
+<p>1.每个框的中心点坐标与宽高loss</p>
+<p>2.每个<strong>预测对</strong>的框内部是否存在物体的loss</p>
+<p>3.每个<strong>预测错</strong>的框内部是否存在物体的loss </p>
+<h1 id="RetinaNet-（focal-loss"><a href="#RetinaNet-（focal-loss" class="headerlink" title="RetinaNet （focal loss)"></a>RetinaNet （focal loss)</h1><p>未完全看完</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/59910080">RetinaNet(Focal Loss) - 知乎 (zhihu.com)</a></p>
+<h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><p>one stage 的神经网络训练过程中类别失衡，即简单负样本数量过多。</p>
+<p>会有置信度很低，但是数量很多的目标，在loss中占比很大。</p>
+<p>从而使得那些数量很少但是置信度很高的识别结果，在反向传播时起到很小的作用。影响整体收敛。</p>
+<h4 id="focal-loss"><a href="#focal-loss" class="headerlink" title="focal loss"></a>focal loss</h4><p><img src="https://www.zhihu.com/equation?tex=FL(p_t)=%5Calpha_t(1-p_t)%5E%5Cgamma+log(p_t)" alt="[公式]"></p>
+<p><img src="https://www.zhihu.com/equation?tex=p_t" alt="[公式]"> 是不同类别的分类概率， <img src="https://www.zhihu.com/equation?tex=%5Cgamma" alt="[公式]"> 是个大于0的值， <img src="https://www.zhihu.com/equation?tex=%5Calpha_t" alt="[公式]"> 是个[0，1]间的小数， <img src="https://www.zhihu.com/equation?tex=%5Cgamma" alt="[公式]"> 和 <img src="https://www.zhihu.com/equation?tex=%5Calpha_t" alt="[公式]"> 都是固定值，不参与训练。从表达式可以看出：</p>
+<ol>
+<li>无论是前景类还是背景类， <img src="https://www.zhihu.com/equation?tex=p_t" alt="[公式]"> 越大，权重 <img src="https://www.zhihu.com/equation?tex=(1-p_t)" alt="[公式]"> 就越小。也就是说easy example可以通过权重进行抑制。换言之，当某样本类别比较明确些，它对整体loss的贡献就比较少；而若某样本类别不易区分，则对整体loss的贡献就相对偏大。这样得到的loss最终将集中精力去诱导模型去努力分辨那些难分的目标类别，于是就有效提升了整体的目标检测准度。</li>
+<li><img src="https://www.zhihu.com/equation?tex=%5Calpha_t+" alt="[公式]"> 用于调节positive和negative的比例，前景类别使用 <img src="https://www.zhihu.com/equation?tex=%5Calpha_t" alt="[公式]"> 时，对应的背景类别使用 <img src="https://www.zhihu.com/equation?tex=1-%5Calpha_t" alt="[公式]"> ；</li>
+<li><img src="https://www.zhihu.com/equation?tex=%5Cgamma" alt="[公式]"> 和 <img src="https://www.zhihu.com/equation?tex=%5Calpha_t" alt="[公式]"> 的最优值是相互影响的，所以在评估准确度时需要把两者组合起来调节。作者在论文中给出 <img src="https://www.zhihu.com/equation?tex=%5Cgamma=2+" alt="[公式]"> 、 <img src="https://www.zhihu.com/equation?tex=%5Calpha_t=0.25" alt="[公式]"> 时，ResNet-101+FPN作为backbone的结构有最优的性能。</li>
+</ol>
+<p>之后语义分割中，对于物体和背景之间面积不平衡的问题，也可以用focal loss解决。</p>
+<h1 id="Fcos"><a href="#Fcos" class="headerlink" title="Fcos"></a>Fcos</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/63868458">FCOS:一阶全卷积目标检测 - 知乎 (zhihu.com)</a><br><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1904.01355.pdf">论文</a></p>
+<h3 id="1-backbone"><a href="#1-backbone" class="headerlink" title="1.backbone"></a>1.backbone</h3><p>fpn的backbone</p>
+<h3 id="2-head"><a href="#2-head" class="headerlink" title="2.head"></a>2.head</h3><p>对fpn提取到的特征图，对特征图上每个点都进行预测。</p>
+<p>预测包括类别信息和坐标信息。</p>
+<p>其中类别信息为每个类的置信度,坐标信息为和中心点的左右上下偏离坐标。</p>
+<p>即最终预测结果为 特征图大小 * (类别数 + 4 )。</p>
+<h3 id="3-centerness-loss-过滤低质量预测框"><a href="#3-centerness-loss-过滤低质量预测框" class="headerlink" title="3.centerness loss 过滤低质量预测框"></a>3.centerness loss 过滤低质量预测框</h3><p><img src="/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Banchor-free%E9%9B%86%E5%90%88/image-20210918162310459.png" alt="image-20210918162310459"></p>
+<p>因为特征图上每个点都会进行预测，会产生很多偏离中心的低质量预测框，比如上面的蓝色框。</p>
+<p>于是设计了一个loss用于表示与中心的偏离程度,即centerness(中心度)。<br>在预测时，centerness loss 与分类置信度相乘。使偏离中心的预测结果,置信度降低,被过滤掉。<br>$$<br>centerness = \sqrt{\frac{min(l,r)}{max(l,r)}*\frac{min(t,b)}{max(t,b)}}<br>$$</p>
+<h1 id="CornerNet-待看"><a href="#CornerNet-待看" class="headerlink" title="CornerNet(待看)"></a>CornerNet(待看)</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/73422357">CornerNet 和 CornerNet-Lite - 知乎 (zhihu.com)</a></p>
+<p>转换了回归任务的目标,通过检测一对关键点（左上角点和右下角点）来检测物体。</p>
+<p>此外，作者还提出了一种新的池化方式——corner pooling，来帮助网络更好的定位角点的位置。</p>
+<h1 id="YOLOX-（最后看）"><a href="#YOLOX-（最后看）" class="headerlink" title="YOLOX （最后看）"></a>YOLOX （最后看）</h1><h4 id="1-decoupled-head"><a href="#1-decoupled-head" class="headerlink" title="1.decoupled head"></a>1.decoupled head</h4><p>解耦了分类和回归目标框的任务。</p>
+<p>而在yolov3 v4 v5中，分类和回归最后都是在特征图上一起得出的。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag"># 神经网络</a>
+          
+            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/09/16/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E9%A1%B9%E7%9B%AEnnunet%E4%BB%A3%E7%A0%81%E8%B7%91%E9%80%9A/" rel="next" title="深度学习项目nnunet代码跑通">
+                <i class="fa fa-chevron-left"></i> 深度学习项目nnunet代码跑通
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/09/18/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8Bnormalization%E6%9C%BA%E5%88%B6/" rel="prev" title="神经网络之normalization机制">
+                神经网络之normalization机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0"><span class="nav-number">1.</span> <span class="nav-text">文章</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yolov1"><span class="nav-number">2.</span> <span class="nav-text">yolov1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%9F%A9%E9%98%B5%E7%9A%84%E6%9E%84%E6%88%90"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">输出矩阵的构成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loss%E7%BB%93%E6%9E%84"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">loss结构</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RetinaNet-%EF%BC%88focal-loss"><span class="nav-number">3.</span> <span class="nav-text">RetinaNet （focal loss)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#focal-loss"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">focal loss</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fcos"><span class="nav-number">4.</span> <span class="nav-text">Fcos</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-backbone"><span class="nav-number">4.0.1.</span> <span class="nav-text">1.backbone</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-head"><span class="nav-number">4.0.2.</span> <span class="nav-text">2.head</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-centerness-loss-%E8%BF%87%E6%BB%A4%E4%BD%8E%E8%B4%A8%E9%87%8F%E9%A2%84%E6%B5%8B%E6%A1%86"><span class="nav-number">4.0.3.</span> <span class="nav-text">3.centerness loss 过滤低质量预测框</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CornerNet-%E5%BE%85%E7%9C%8B"><span class="nav-number">5.</span> <span class="nav-text">CornerNet(待看)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#YOLOX-%EF%BC%88%E6%9C%80%E5%90%8E%E7%9C%8B%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">YOLOX （最后看）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-decoupled-head"><span class="nav-number">6.0.0.1.</span> <span class="nav-text">1.decoupled head</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Doge</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
