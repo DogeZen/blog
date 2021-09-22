@@ -241,6 +241,157 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/11/20210711%E5%91%A8%E6%8A%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="柴犬的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/07/11/20210711%E5%91%A8%E6%8A%A5/" itemprop="url">20210711周报</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-07-11T08:00:00+08:00">
+                2021-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>1.</strong> <strong>项目论文一</strong></p>
+<p>Radiomic Analysis of MyocardialNative T1Imaging DiscriminatesBetween Hypertensive Heart Diseaseand Hypertrophic Cardiomyopathy</p>
+<p>使用svm，输入纹理特征，输出辨别高血压心脏病和肥厚型心肌病。</p>
+<p>对纹理特征不熟悉(都不知道是什么)，有时间的时候找找相关资料了解一下。</p>
+<p><strong>2.</strong> <strong>项目论文二</strong></p>
+<p>Deep Learning for Diagnosis of Chronic Myocardial Infarction on Nonenhanced Cardiac Cine MRI</p>
+<p>深度学习检测慢性心肌梗死。</p>
+<p>代码已开源<a target="_blank" rel="noopener" href="https://github.com/xuchenchuzw/MI-Segmentation#mlsegmentation">xuchenchuzw/MI-Segmentation (github.com)</a></p>
+<p>1.先训练一个目标检测网络确定ROI区域。这个目标检测网络很简单，先用一个alexnet改的神经网络提取特征，然后在特征图上通过anchor box确定roi区域。(rcnn系列的思路)</p>
+<p>2.然后对这个区域取25帧训练特征提取网络，提取25*n的特征。再对这个时序特征过lstm，得到局部特征向量。</p>
+<p>3.另一个网络提取全局的运动特征，得到全局特征向量。</p>
+<p>4.最后把两个特征向量拼接，过一个autoencoder得到预测结果。</p>
+<p><strong>阅读感受</strong>：</p>
+<p>优化空间非常巨大(毕竟距离这篇论文的代码编写已经三年过去了，主流模型升级巨大)。</p>
+<p>1.检测网络可以用性能更好的目标检测网络。</p>
+<p>2.lstm可以换transformer。</p>
+<p>3.最后的stacked autoencoder其实就是个简单的神经网络，应该也可以优化。</p>
+<p><strong>3.</strong> <strong>其他论文</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lifei1229/article/details/105991210">关于新冠肺炎（COVID-19）论文解读集合</a></p>
+<p>新冠肺炎属于去年刚出的领域，因此它的分类识别也一定刚出了很多论文。</p>
+<p>所以看了去年新冠肺炎识别的论文，方便开展心脏病分类的项目。</p>
+<p>Using Artificial Intelligence to Detect COVID-19 and Community-acquired Pneumonia Based on Pulmonary CT: Evaluation of the Diagnostic Accuracy</p>
+<p>可以参考它的预处理<br> **Preprocessing:**CT images were extracted from Digital Imaging and Communications in Medicine (DICOM) files. We then followed the following steps to preprocess the CT images. First, the lung region is extracted as the region of interest (ROI) using a U-net (1) based segmentation method. Afterward, the extracted lung ROI was resampled to the same spacing (1 mm) in the z-direction. To reduce the dimensionality of the CT scan, we further down sampled the lung ROI by 5 times in the z-direction and scaled it to S × 224 × 224 pixels with S as the number of CT slices in the down sampled lung ROI. Then, the voxel intensity values were first clipped using a window/level of 1500HU/-500HU and were then normalized to the range of [0, 1]. To reduce the influence of vascular structure and boost the signals of the lesions, a maximum intensity projection (MIP) algorithm was also applied to each of the slices. Finally, the preprocessed image is then passed to the proposed COVID-19 detection neural network (COVNet) for the predictions.</p>
+<p><strong>Data augmentation:</strong> Each training example was rotated randomly between —3 and 3 degrees and flipped horizontally or vertically with 50% probability. We further add random Gaussian noise with a maximum variance of 0.015 to the image. </p>
+<p><strong>Implementation details:</strong> COVNet was implemented with Python 3.7 and PyTorch 1.4 (2) and training with an NVIDIA V100 GPU. The weights of the ResNet50 (3) backbone of the COVNet was first initialized to values optimized on the ImageNet database (4) and were then fine-tuned to fit our chest CT dataset. The cross-entropy loss was used to optimize the model. The model with the highest accuracy on the internal validation set was chosen for evaluation on the independent testing set. The code to reproduce the results in this study is made available via: <a target="_blank" rel="noopener" href="https://github.com/bkong999/COVNet.git">https://github.com/bkong999/COVNet.git</a>. </p>
+<p>顺便解决了个他git的一个简单issue <a target="_blank" rel="noopener" href="https://github.com/bkong999/COVNet/issues/28">place of softmax function · Issue #28 · bkong999/COVNet (github.com)</a></p>
+<p>另外他用了Grad-Cam来体现神经网络的可解释性，这个比较有意思。打算花点时间看看。 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/90055970">1. Grad-CAM阅读笔记 -神经网络输出可视化 - 知乎 (zhihu.com)</a></p>
+<p>20210709复现完成</p>
+<p><strong>4.</strong> <strong>论文复现流程</strong></p>
+<p>先不搞分割了，把之前写完的代码打个包上传git了，以后搞分割项目再回来看。</p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/doge_ac_cn/unet3d">柴犬/unet3d - 码云 - 开源中国 (gitee.com)</a></p>
+<p><strong>5.</strong> <strong>问了一下cv交流群，关于之前别人给的ct图片读取是全黑的问题,知道了转rgb值会有精度损失，以及需要设置窗位和窗宽</strong></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/11/git%E6%93%8D%E4%BD%9C%E5%B0%8F%E5%90%88%E9%9B%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1503,139 +1654,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/15/python%E5%9F%BA%E7%A1%80%EF%BC%9Aisnone%E5%92%8C=none/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="柴犬的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/06/15/python%E5%9F%BA%E7%A1%80%EF%BC%9Aisnone%E5%92%8C=none/" itemprop="url">python基础:is None和==None的区别</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-15T07:00:00+08:00">
-                2021-06-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>is表示的是对象标识符，用来<strong>检查对象的标识符是否一致</strong>，即两个对象在内存中的地址是否一致。在使用 <code>a is b</code> 的时候，相当于<code>id(a)==id(b)</code>。</p>
-<p>==表示<strong>两个对象是否相等</strong>，相当于调用<code>__eq__()</code>方法，即’a==b’等价于<code>a.__eq__(b)</code>。</p>
-<p>这两个方法很像，<strong>但是不能完全随意替换用</strong></p>
-<p>因为None在Python里是个单例对象，一个变量如果是None，它一定和None指向同一个内存地址。</p>
-<p>is None是判断两个对象在内存中的地址是否一致，== None背后调用的是<strong>eq</strong>，而<strong>eq</strong>可以被重载</p>
-<p>比如这里如果用==None，就会报错</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()</span><br></pre></td></tr></table></figure>
-
-<p>因为这里numpy的==重载了</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">&gt;</a>
   </nav>
 
 
@@ -1682,7 +1705,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1695,7 +1718,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
